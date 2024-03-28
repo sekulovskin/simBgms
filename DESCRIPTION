@@ -1,0 +1,16 @@
+Package: simBgms
+Title: An R package that for performing simulation studies for Bayesian Graphical Modeling
+Version: 0.0.0.1
+Authors@R: person("Nikola", "Sekulovski", , "n.sekulovski@uva.nl", role = c("aut", "cre"), comment = c(ORCID = "orcid.org/0000-0001-7032-1684"))
+Description: This package can be used to simulate data for Markov random field models and estimate those models using the R packages bgms and BDgraph. It provides an easy way to perform simulation studies without requiring advanced programming skills. The package can parralelize the estimation of the models, making the process computationally efficient.
+License: GPL (>= 2)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Depends: 
+    R (>= 2.10) 
+Imports: Rcpp (>= 1.0.7), Rdpack, doParallel, foreach, bgms, BDgraph, methods
+LinkingTo: Rcpp, RcppProgress
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
