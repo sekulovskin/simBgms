@@ -37,8 +37,12 @@
 
 
 estimate_models <- function(level = c("Gaussian", "Discrete"),
-                            variable_type = "ordinal", reference_category = 1,
-                            repetitions, data, no_observations, no_variables,
+                            variable_type = "ordinal",
+                            reference_category = 1,
+                            repetitions,
+                            data,
+                            no_observations,
+                            no_variables,
                             no_categories,
                             interaction_scale = 2.5,
                             iter = 1e4,

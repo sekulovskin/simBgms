@@ -96,7 +96,8 @@ sim_bgm <- function(level = c("Gaussian", "Discrete"),
                             bc_beta = bc_beta)
 
       est <- estimate_models(level = "Discrete",
-                             repetitions  = repetitions , data = data[[1]],
+                             repetitions  = repetitions ,
+                             data = data[[1]],
                              no_observations = no_observations,
                              no_variables = no_variables,
                              no_categories = no_categories,
