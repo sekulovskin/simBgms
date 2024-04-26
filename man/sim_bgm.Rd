@@ -26,10 +26,12 @@ sim_bgm(
   beta_bernoulli_beta = 1,
   dataset,
   save = FALSE,
+  df.prior = 3,
   algorithm = "bdmcmc",
   bc_alpha = 0.5,
   bc_beta = -0.5,
-  iter = 10000
+  iter = 10000,
+  burnin = 1000
 )
 }
 \arguments{
@@ -71,14 +73,18 @@ sim_bgm(
 
 \item{save}{Logical. If \code{TRUE}, the samples fro the MCMC algorithm are saved from all the iterations \code{iter}. Only avialable when \code{level = "Discrete"}.}
 
+\item{df.prior}{Numeric. The degrees of freedom for the prior distribution of the precision matrix (only relevant if \code{level = "Gaussian"}).}
+
 \item{algorithm}{Character. The algorithm to use for estimating the Gaussian Graphical Model (only relevant if \code{level = "Gaussian"}).}
 
 \item{bc_alpha, bc_beta}{Numeric. \code{bc_alpha} the linear contribution of the Blume-Capel model and \code{bc_beta} the quadratic contribution. Defaults to 0.5 and 0.5, respectively.}
 
 \item{iter}{Numeric. The number of iterations for the MCMC algorithm.}
+
+\item{burnin}{Numeric. The number of burn-in iterations for the MCMC algorithm.}
 }
 \value{
-A list containing: (i) a data frame with the summarized results, averaged across \code{repetitions}; (ii) a list with the estimated models; (iii) the simulated data sets; (iv) the maximum pseudolikelihood parameters or precision matrices; (v) the graph adjacency matrices; and (vi) a data frame with the parameter grid for an overview of the design of the simulation.
+A list containing: (i) a data frame with the summarized results (only if \code{save = FALSE}), averaged across \code{repetitions}; (ii) a list with the estimated models; (iii) the simulated data sets; (iv) the maximum pseudolikelihood parameters or precision matrices; (v) the graph adjacency matrices; and (vi) a data frame with the parameter grid for an overview of the design of the simulation.
 }
 \description{
 This is the main function of the package. The function simulates data from either a Gaussian or Discrete (ordinal or binary) Markov Random Field (MRF) and estimates the model parameters using Bayesian inference using the \code{R} packages \code{BDgraph} and \code{bgms}. It provides flexibility in specifying the level of measurement, edge (structure) priors. It package is able to parallelize the estimation of the models using multiple cores, providing computational efficiency when running large simulation studies.

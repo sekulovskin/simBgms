@@ -21,9 +21,11 @@
 #' @param beta_bernoulli_alpha,beta_bernoulli_beta The two shape parameters of the Beta prior density for the Bernoulli inclusion probability. Must be positive numbers. Defaults to \code{beta_bernoulli_alpha = 1} and \code{beta_bernoulli_beta = 1}.
 #' @param dataset Data frame or matrix. Only relevant if \code{level = "Discrete"} and \code{irt = FALSE}, the user can provide a dataset which will be used to generate the maximum pseudolikelihood parameters. Note that the number of variables in the provided data set needs to be equal to or larger than the highest number provided in the argument \code{no_variables}. Also, the number of ordinal categories in the provided data set must be larger than or equal to the number of ordinal categories provided in \code{no_categories}.
 #' @param save Logical. If \code{TRUE}, the samples fro the MCMC algorithm are saved from all the iterations \code{iter}. Only avialable when \code{level = "Discrete"}.
+#' @param df.prior Numeric. The degrees of freedom for the prior distribution of the precision matrix (only relevant if \code{level = "Gaussian"}).
+#' @param burnin Numeric. The number of burn-in iterations for the MCMC algorithm.
 #' @param algorithm Character. The algorithm to use for estimating the Gaussian Graphical Model (only relevant if \code{level = "Gaussian"}).
 #' @param bc_alpha,bc_beta Numeric. \code{bc_alpha} the linear contribution of the Blume-Capel model and \code{bc_beta} the quadratic contribution. Defaults to 0.5 and 0.5, respectively.
-#' @return A list containing: (i) a data frame with the summarized results, averaged across \code{repetitions}; (ii) a list with the estimated models; (iii) the simulated data sets; (iv) the maximum pseudolikelihood parameters or precision matrices; (v) the graph adjacency matrices; and (vi) a data frame with the parameter grid for an overview of the design of the simulation.
+#' @return A list containing: (i) a data frame with the summarized results (only if \code{save = FALSE}), averaged across \code{repetitions}; (ii) a list with the estimated models; (iii) the simulated data sets; (iv) the maximum pseudolikelihood parameters or precision matrices; (v) the graph adjacency matrices; and (vi) a data frame with the parameter grid for an overview of the design of the simulation.
 #' @param iter Numeric. The number of iterations for the MCMC algorithm.
 #' @details This function integrates the simulation and estimation process for Bayesian Graphical Models. It provides options for parallel computation using multiple CPU cores.
 #'
@@ -63,11 +65,14 @@ sim_bgm <- function(level = c("Gaussian", "Discrete"),
                     inclusion_probability = 0.5,
                     beta_bernoulli_alpha = 1,
                     beta_bernoulli_beta = 1,
-                    dataset, save = FALSE,
+                    dataset,
+                    save = FALSE,
+                    df.prior = 3,
                     algorithm = "bdmcmc",
                     bc_alpha = 0.5,
                     bc_beta = -0.5,
-                    iter = 1e4) {
+                    iter = 1e4,
+                    burnin = 1e3) {
 
   # Set default number of cores if not specified by user
   if(is.null(no_cores)) {
@@ -101,7 +106,8 @@ sim_bgm <- function(level = c("Gaussian", "Discrete"),
                             bc_beta = bc_beta)
 
       est <- estimate_models(level = "Discrete",
-                             repetitions  = repetitions , data = data[[1]],
+                             repetitions  = repetitions ,
+                             data = data[[1]],
                              no_observations = no_observations,
                              no_variables = no_variables,
                              no_categories = no_categories,
@@ -117,25 +123,45 @@ sim_bgm <- function(level = c("Gaussian", "Discrete"),
                              edge_selection = edge_selection,
                              inclusion_probability = inclusion_probability,
                              beta_bernoulli_alpha = beta_bernoulli_alpha,
-                             beta_bernoulli_beta = beta_bernoulli_beta)
+                             beta_bernoulli_beta = beta_bernoulli_beta,
+                             burnin = burnin)
 
-      summary <- summarize(est = est[[1]],
-                           level = "Discrete",
-                           repetitions  = repetitions,
-                           no_observations = no_observations,
-                           no_variables = no_variables,
-                           no_categories = no_categories,
-                           interaction_scale = interaction_scale,
-                           density = density)
 
-      output <- list("summarized results" = summary,
-                     "estimated models" = est[[1]],
-                     "simulated data" = data[[1]],
-                     "mple parameters" = data[[2]],
-                     "adjacency matrices" = data[[3]],
-                     "parameter grid" = est[[2]])
+      if(save == TRUE){
+        warning("The samples from the MCMC algorithm are saved from all the iterations,
+                 therefore, the results will not be summarized. If you wish obtain
+                 summarized results, set save = FALSE.")
 
-      class(output) <- "simBgms"
+        output <- list("estimated models" = est[[1]],
+                       "simulated data" = data[[1]],
+                       "mple parameters" = data[[2]],
+                       "adjacency matrices" = data[[3]],
+                       "parameter grid" = est[[2]])
+
+        class(output) <- "simBgms"
+
+      } else{
+
+        summary <- summarize(est = est[[1]],
+                             level = "Discrete",
+                             repetitions  = repetitions,
+                             no_observations = no_observations,
+                             no_variables = no_variables,
+                             no_categories = no_categories,
+                             interaction_scale = interaction_scale,
+                             density = density)
+
+        output <- list("summarized results" = summary,
+                       "estimated models" = est[[1]],
+                       "simulated data" = data[[1]],
+                       "mple parameters" = data[[2]],
+                       "adjacency matrices" = data[[3]],
+                       "parameter grid" = est[[2]])
+
+        class(output) <- "simBgms"
+
+
+      }
 
       return(output)
 
@@ -148,31 +174,53 @@ sim_bgm <- function(level = c("Gaussian", "Discrete"),
                             density = density)
 
       est <- estimate_models(level = "Gaussian",
-                             repetitions  = repetitions , data = data[[1]],
+                             repetitions  = repetitions ,
+                             data = data[[1]],
                              no_observations = no_observations,
-                             no_variables = no_variables, iter = 1e4,
+                             no_variables = no_variables,
+                             iter = 1e4,
+                             df.prior = df.prior,
                              algorithm = algorithm,
                              density = density,
-                             no_cores = no_cores)
+                             no_cores = no_cores,
+                             inclusion_probability = inclusion_probability,
+                             burnin = burnin,
+                             save = save)
 
 
-      summary <- summarize(est = est[[1]],
-                           level = "Gaussian",
-                           repetitions  = repetitions,
-                           no_observations = no_observations,
-                           no_variables = no_variables,
-                           no_categories = no_categories,
-                           interaction_scale = interaction_scale,
-                           density = density)
+      if(save == TRUE){
+        warning("The samples from the MCMC algorithm are saved from all the iterations,
+                 therefore, the results will not be summarized. If you wish obtain
+                 summarized results, set save = FALSE.")
 
-      output <- list("summarized results" = summary,
-                     "estimated models" = est[[1]],
-                     "simulated data" = data[[1]],
-                     "precision matrices" = data[[2]],
-                     "adjacency matrices" = data[[3]],
-                     "parameter grid" = est[[2]])
+        output <- list("estimated models" = est[[1]],
+                       "simulated data" = data[[1]],
+                       "precision matrices" = data[[2]],
+                       "adjacency matrices" = data[[3]],
+                       "parameter grid" = est[[2]])
+      } else{
 
-      class(output) <- "simBgms"
+
+        summary <- summarize(est = est[[1]],
+                             level = "Gaussian",
+                             repetitions  = repetitions,
+                             no_observations = no_observations,
+                             no_variables = no_variables,
+                             no_categories = no_categories,
+                             interaction_scale = interaction_scale,
+                             density = density)
+
+        output <- list("summarized results" = summary,
+                       "estimated models" = est[[1]],
+                       "simulated data" = data[[1]],
+                       "precision matrices" = data[[2]],
+                       "adjacency matrices" = data[[3]],
+                       "parameter grid" = est[[2]])
+
+        class(output) <- "simBgms"
+
+
+      }
 
       return(output)
     }
