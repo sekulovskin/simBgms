@@ -37,8 +37,11 @@
 
 
 estimate_models <- function(level = c("Gaussian", "Discrete"),
-                            variable_type = "ordinal", reference_category = 1,
-                            repetitions, data, no_observations, no_variables,
+                            variable_type = "ordinal",
+                            reference_category = 1,
+                            repetitions, data,
+                            no_observations,
+                            no_variables,
                             no_categories,
                             interaction_scale = 2.5,
                             iter = 1e4,
@@ -69,6 +72,7 @@ estimate_models <- function(level = c("Gaussian", "Discrete"),
 
 
     param_grid <- expand.grid(repetitions  = 1:repetitions,
+                              s = 1:length(interaction_scale),
                               l = 1:length(no_categories),
                               k = 1:length(density),
                               i = 1:length(no_observations),
@@ -83,13 +87,14 @@ estimate_models <- function(level = c("Gaussian", "Discrete"),
       k <- row_params[["k"]]
       i <- row_params[["i"]]
       j <- row_params[["j"]]
+      s <- row_params[["s"]]
 
       # Estimate
       tryCatch({
         bgms::bgm(data[[h]][[i]][[j]][[k]][[l]],
                   variable_type = variable_type,
                   reference_category = reference_category,
-                  interaction_scale = interaction_scale,
+                  interaction_scale = interaction_scale[s],
                   edge_prior = edge_prior,
                   iter = iter,
                   save = save,

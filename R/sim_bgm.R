@@ -13,7 +13,7 @@
 #' @param density Numeric. The density/sparsity of the adjacency matrix used to generate the data sets (only relevant if \code{induce_sparsity = TRUE}).
 #' @param irt Logical. If \code{TRUE}, data with \code{no_observations = 1000} from an IRT model is used to generate the maximum pseudolikelihood parameters which are then used to generate the simulated data sets for the MRFs (only relevant if \code{level = "Discrete"}).
 #' @param interaction_scale Numeric. The interaction_scale parameter for the interaction and edge priors.
-#' @param no_cores Numeric. The number of CPU cores to use for parallel computation. The parallel computation is only used for the Bayesian analysis, and not for simulating the data.
+#' @param no_cores  The number of CPU cores to use for parallel computation. The parallel computation is only used for the Bayesian analysis, and not for simulating the data. Defaults to the maximum number of cores available on the user's machine.
 #' @param edge_prior The inclusion or exclusion of individual edges in the network is modeled with binary indicator variables that capture the structure of the network. The argument \code{edge_prior} is used to set a prior distribution for the edge indicator variables, i.e., the structure of the network. Currently, two options are implemented: The Bernoulli model \code{edge_prior = "Bernoulli"} assumes that the probability that an edge between two variables is included is equal to inclusion_probability and independent of other edges or variables. When inclusion_probability = 0.5, this means that each possible network structure is given the same prior weight. The Beta-Bernoulli model \code{edge_prior = "Beta-Bernoulli"} assumes a beta prior for the unknown inclusion probability with shape parameters \code{beta_bernoulli_alpha} and \code{beta_bernoulli_beta}. If \code{beta_bernoulli_alpha = 1} and \code{beta_bernoulli_beta = 1}, this means that networks with the same complexity (number of edges) get the same prior weight. The default is \code{edge_prior = "Bernoulli"}. For more details see the documentation of the \code{R} package \code{bgms}.
 #' @param threshold_alpha,threshold_beta The shape parameters of the beta-prime prior density for the threshold parameters. Must be positive values. If the two values are equal, the prior density is symmetric about zero. If threshold_beta is greater than \code{threshold_alpha}, the distribution is skewed to the left, and if threshold_beta is less than \code{threshold_alpha}, it is skewed to the right. Smaller values tend to lead to more diffuse prior distributions.
 #' @param edge_selection Should the function perform Bayesian edge selection on the edges of the MRF in addition to estimating its parameters (\code{edge_selection = TRUE}), or should it just estimate the parameters (\code{edge_selection = FALSE})? The default is \code{edge_selection = TRUE}.
@@ -23,7 +23,7 @@
 #' @param save Logical. If \code{TRUE}, the samples fro the MCMC algorithm are saved from all the iterations \code{iter}. Only avialable when \code{level = "Discrete"}.
 #' @param algorithm Character. The algorithm to use for estimating the Gaussian Graphical Model (only relevant if \code{level = "Gaussian"}).
 #' @param bc_alpha,bc_beta Numeric. \code{bc_alpha} the linear contribution of the Blume-Capel model and \code{bc_beta} the quadratic contribution. Defaults to 0.5 and 0.5, respectively.
-#' @return A list containing the estimated models, simulated data, maximum pseudolikelihood parameters or precision matrices, adjacency matrices and the parameter grid for an overview of the design of the simulation.
+#' @return A list containing: (i) a data frame with the summarized results, averaged across \code{repetitions}; (ii) a list with the estimated models; (iii) the simulated data sets; (iv) the maximum pseudolikelihood parameters or precision matrices; (v) the graph adjacency matrices; and (vi) a data frame with the parameter grid for an overview of the design of the simulation.
 #' @param iter Numeric. The number of iterations for the MCMC algorithm.
 #' @details This function integrates the simulation and estimation process for Bayesian Graphical Models. It provides options for parallel computation using multiple CPU cores.
 #'
@@ -55,7 +55,7 @@ sim_bgm <- function(level = c("Gaussian", "Discrete"),
                     density = 0.5,
                     irt = TRUE,
                     interaction_scale = 2.5,
-                    no_cores = 1,
+                    no_cores = NULL,
                     edge_prior = "Bernoulli",
                     threshold_alpha = 0.5,
                     threshold_beta = 0.5,
@@ -68,6 +68,12 @@ sim_bgm <- function(level = c("Gaussian", "Discrete"),
                     bc_alpha = 0.5,
                     bc_beta = -0.5,
                     iter = 1e4) {
+
+  # Set default number of cores if not specified by user
+  if(is.null(no_cores)) {
+    no_cores <- parallel::detectCores()
+  }
+
 
   if(induce_sparsity == TRUE){
     density <- density
@@ -113,7 +119,17 @@ sim_bgm <- function(level = c("Gaussian", "Discrete"),
                              beta_bernoulli_alpha = beta_bernoulli_alpha,
                              beta_bernoulli_beta = beta_bernoulli_beta)
 
-      output <- list("estimated models" = est[[1]],
+      summary <- summarize(est = est[[1]],
+                           level = "Discrete",
+                           repetitions  = repetitions,
+                           no_observations = no_observations,
+                           no_variables = no_variables,
+                           no_categories = no_categories,
+                           interaction_scale = interaction_scale,
+                           density = density)
+
+      output <- list("summarized results" = summary,
+                     "estimated models" = est[[1]],
                      "simulated data" = data[[1]],
                      "mple parameters" = data[[2]],
                      "adjacency matrices" = data[[3]],
@@ -139,7 +155,18 @@ sim_bgm <- function(level = c("Gaussian", "Discrete"),
                              density = density,
                              no_cores = no_cores)
 
-      output <- list("estimated models" = est[[1]],
+
+      summary <- summarize(est = est[[1]],
+                           level = "Gaussian",
+                           repetitions  = repetitions,
+                           no_observations = no_observations,
+                           no_variables = no_variables,
+                           no_categories = no_categories,
+                           interaction_scale = interaction_scale,
+                           density = density)
+
+      output <- list("summarized results" = summary,
+                     "estimated models" = est[[1]],
                      "simulated data" = data[[1]],
                      "precision matrices" = data[[2]],
                      "adjacency matrices" = data[[3]],

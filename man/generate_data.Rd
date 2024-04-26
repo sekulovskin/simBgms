@@ -6,7 +6,7 @@
 \usage{
 generate_data(
   level = c("Gaussian", "Discrete"),
-  variable_type,
+  variable_type = "ordinal",
   reference_category,
   repetitions,
   no_observations,

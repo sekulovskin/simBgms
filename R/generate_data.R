@@ -35,7 +35,7 @@
 
 
 generate_data <- function(level = c("Gaussian", "Discrete"),
-                          variable_type,
+                          variable_type = "ordinal",
                           reference_category,
                           repetitions,
                           no_observations,

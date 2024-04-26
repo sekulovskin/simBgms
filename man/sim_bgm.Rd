@@ -16,7 +16,7 @@ sim_bgm(
   density = 0.5,
   irt = TRUE,
   interaction_scale = 2.5,
-  no_cores = 1,
+  no_cores = NULL,
   edge_prior = "Bernoulli",
   threshold_alpha = 0.5,
   threshold_beta = 0.5,
@@ -55,7 +55,7 @@ sim_bgm(
 
 \item{interaction_scale}{Numeric. The interaction_scale parameter for the interaction and edge priors.}
 
-\item{no_cores}{Numeric. The number of CPU cores to use for parallel computation. The parallel computation is only used for the Bayesian analysis, and not for simulating the data.}
+\item{no_cores}{The number of CPU cores to use for parallel computation. The parallel computation is only used for the Bayesian analysis, and not for simulating the data. Defaults to the maximum number of cores available on the user's machine.}
 
 \item{edge_prior}{The inclusion or exclusion of individual edges in the network is modeled with binary indicator variables that capture the structure of the network. The argument \code{edge_prior} is used to set a prior distribution for the edge indicator variables, i.e., the structure of the network. Currently, two options are implemented: The Bernoulli model \code{edge_prior = "Bernoulli"} assumes that the probability that an edge between two variables is included is equal to inclusion_probability and independent of other edges or variables. When inclusion_probability = 0.5, this means that each possible network structure is given the same prior weight. The Beta-Bernoulli model \code{edge_prior = "Beta-Bernoulli"} assumes a beta prior for the unknown inclusion probability with shape parameters \code{beta_bernoulli_alpha} and \code{beta_bernoulli_beta}. If \code{beta_bernoulli_alpha = 1} and \code{beta_bernoulli_beta = 1}, this means that networks with the same complexity (number of edges) get the same prior weight. The default is \code{edge_prior = "Bernoulli"}. For more details see the documentation of the \code{R} package \code{bgms}.}
 
@@ -78,7 +78,7 @@ sim_bgm(
 \item{iter}{Numeric. The number of iterations for the MCMC algorithm.}
 }
 \value{
-A list containing the estimated models, simulated data, maximum pseudolikelihood parameters or precision matrices, adjacency matrices and the parameter grid for an overview of the design of the simulation.
+A list containing: (i) a data frame with the summarized results, averaged across \code{repetitions}; (ii) a list with the estimated models; (iii) the simulated data sets; (iv) the maximum pseudolikelihood parameters or precision matrices; (v) the graph adjacency matrices; and (vi) a data frame with the parameter grid for an overview of the design of the simulation.
 }
 \description{
 This is the main function of the package. The function simulates data from either a Gaussian or Discrete (ordinal or binary) Markov Random Field (MRF) and estimates the model parameters using Bayesian inference using the \code{R} packages \code{BDgraph} and \code{bgms}. It provides flexibility in specifying the level of measurement, edge (structure) priors. It package is able to parallelize the estimation of the models using multiple cores, providing computational efficiency when running large simulation studies.
