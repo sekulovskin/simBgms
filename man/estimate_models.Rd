@@ -17,7 +17,7 @@ estimate_models(
   iter = 10000,
   induce_sparsity = TRUE,
   density = 0.5,
-  no_cores = 1,
+  no_cores = NULL,
   save = FALSE,
   edge_prior = "Bernoulli",
   threshold_alpha = 0.5,
@@ -26,8 +26,9 @@ estimate_models(
   inclusion_probability = 0.5,
   beta_bernoulli_alpha = 1,
   beta_bernoulli_beta = 1,
-  g.prior = 0.5,
-  algorithm = "bdmcmc"
+  df.prior = 3,
+  algorithm = "bdmcmc",
+  burnin = 1000
 )
 }
 \arguments{
@@ -55,7 +56,7 @@ estimate_models(
 
 \item{density}{Numeric. The density/sparsity of the adjacency matrix used to generate the data sets (only relevant if \code{induce_sparsity = TRUE}).}
 
-\item{no_cores}{Numeric. The number of CPU cores to use for parallel computation.}
+\item{no_cores}{The number of CPU cores to use for parallel computation.}
 
 \item{save}{Logical. If TRUE, the samples fro the MCMC algorithm are saved from all the iterations \code{iter}. Only possible when level = "Discrete".}
 
@@ -65,13 +66,15 @@ estimate_models(
 
 \item{edge_selection}{Should the function perform Bayesian edge selection on the edges of the MRF in addition to estimating its parameters (edge_selection = TRUE), or should it just estimate the parameters (edge_selection = FALSE)? The default is edge_selection = TRUE.}
 
-\item{inclusion_probability}{The prior edge inclusion probability for the Bernoulli model. Can be a single probability, or a matrix of p rows and p columns specifying an inclusion probability for each edge pair. The default is inclusion_probability = 0.5.}
+\item{inclusion_probability}{The prior edge inclusion probability for the Bernoulli model. Can be a single probability, or a matrix of p rows and p columns specifying an inclusion probability for each edge pair. The default is inclusion_probability = 0.5. Corresponds to the g.prior argument in the BDgraph package.}
 
 \item{beta_bernoulli_alpha, beta_bernoulli_beta}{The two shape parameters of the Beta prior density for the Bernoulli inclusion probability. Must be positive numbers. Defaults to beta_bernoulli_alpha = 1 and beta_bernoulli_beta = 1.}
 
-\item{g.prior}{Numeric. The prior probability of an edge in Gaussian Graphical Models (only relevant if level = "Gaussian").}
+\item{df.prior}{Numeric. The degrees of freedom for the prior distribution of the precision matrix (only relevant if level = "Gaussian").}
 
 \item{algorithm}{Character. The algorithm to use for estimating the Gaussian Graphical Model (only relevant if level = "Gaussian").}
+
+\item{burnin}{Numeric. The number of burn-in iterations for the MCMC algorithm}
 }
 \value{
 A list containing the estimated Bayesian Graphical Models and the associated parameter gird.
