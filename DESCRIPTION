@@ -1,7 +1,9 @@
 Package: simBgms
-Title: An R package that for performing simulation studies for Bayesian Graphical Modeling
+Type: Package
+Title: An R package for performing simulation studies for Bayesian Graphical Modeling
 Version: 0.0.0.1
-Authors@R: person("Nikola", "Sekulovski", , "n.sekulovski@uva.nl", role = c("aut", "cre"), comment = c(ORCID = "orcid.org/0000-0001-7032-1684"))
+Author: Nikola Sekulovski 
+Maintainer: Nikola Sekulovski <n.sekulovski@uva.nl>
 Description: This package can be used to simulate data for Markov random field models and estimate those models using the R packages bgms and BDgraph. It provides an easy way to perform simulation studies without requiring advanced programming skills. The package can parralelize the estimation of the models, making the process computationally efficient.
 License: GPL (>= 2)
 Encoding: UTF-8
