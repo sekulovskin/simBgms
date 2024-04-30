@@ -87,7 +87,7 @@ sim_bgm(
 A list containing: (i) a data frame with the summarized results (only if \code{save = FALSE}), averaged across \code{repetitions}; (ii) a list with the estimated models; (iii) the simulated data sets; (iv) the maximum pseudolikelihood parameters or precision matrices; (v) the graph adjacency matrices; and (vi) a data frame with the parameter grid for an overview of the design of the simulation.
 }
 \description{
-This is the main function of the package. The function simulates data from either a Gaussian or Discrete (ordinal or binary) Markov Random Field (MRF) and estimates the model parameters using Bayesian inference using the \code{R} packages \code{BDgraph} and \code{bgms}. It provides flexibility in specifying the level of measurement, edge (structure) priors. It package is able to parallelize the estimation of the models using multiple cores, providing computational efficiency when running large simulation studies.
+This is the main function of the package. The function simulates data from either a Gaussian or Discrete (ordinal or binary) Markov Random Field (MRF) and estimates the model parameters using Bayesian inference using the \code{R} packages \code{BDgraph} and \code{bgms}. It provides flexibility in specifying the data characteristics as well as the edge and structure priors. The package is able to parallelize the estimation of the models using multiple cores, providing computational efficiency when running large simulation studies.
 }
 \details{
 This function integrates the simulation and estimation process for Bayesian Graphical Models. It provides options for parallel computation using multiple CPU cores.

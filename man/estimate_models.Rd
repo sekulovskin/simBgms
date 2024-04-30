@@ -56,7 +56,7 @@ estimate_models(
 
 \item{density}{Numeric. The density/sparsity of the adjacency matrix used to generate the data sets (only relevant if \code{induce_sparsity = TRUE}).}
 
-\item{no_cores}{The number of CPU cores to use for parallel computation.}
+\item{no_cores}{The number of CPU cores to use for parallel computation. The parallel computation is only used for the Bayesian analysis, and not for simulating the data. Defaults to the maximum number of cores available on the user's machine.}
 
 \item{save}{Logical. If TRUE, the samples fro the MCMC algorithm are saved from all the iterations \code{iter}. Only possible when level = "Discrete".}
 

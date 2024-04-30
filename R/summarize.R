@@ -15,13 +15,19 @@ summarize <- function(est,
   # Count the instances with error messages
   error_count <- sum(sapply(est, function(x) is.character(x) && !is.list(x)))
   if(error_count/length(est) != 0){
-    warning("There are models that did not converge,
-            so in post-processing they are repetitionslaced
-            with models from the same simulation settings
-            that did converge. To check which models have failed,
-            check the list of estimated models
-            in the output and compare the index with
-            the one in the parameter gird.")
+    warning("Some models have not converged during the estimation
+            process. In post-processing, these non-converged models
+            are replaced with models from the same simulation settings
+            that did converge. To identify the failed models, inspect
+            the list of estimated models in the output and compare
+            their indices with those in the parameter grid.
+            If a significant number of models have failed to converge,
+            this might cause errors in the post-processing process.
+            If you encounter such issues, consider adjusting the
+            data generation process and retrying. If the problem
+            persists, please contact the package maintainer.")
+
+
     # Find indices of failed models (character elements) and succeeded models (list elements)
     indices_failed <- which(sapply(est, is.character))
     indices_succeeded <- which(sapply(est, is.list))
