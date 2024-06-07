@@ -2,20 +2,20 @@
 #'
 #' This function generates data from a Markov Random Field (MRF) model, which can either be Gaussian or Discrete. For the Discrete case, the function can generate data from an Item Response Theory (IRT) model if specified. The generated data can be used for various simulation studies.
 #'
-#' @param level Character vector specifying the type of data to generate. It can be either "Gaussian" or "Discrete".
-#' @param variable_type What kind of variables are there? Can be a single character string specifying the variable type of all p variables at once or a vector of character strings of length p specifying the type for each variable in x separately. Currently, bgm supports “ordinal” and “blume-capel”. Binary variables are automatically treated as “ordinal’’. Defaults to variable_type = "ordinal". Only relevant if level = "Discrete".
-#' @param reference_category An integer vector of length no_variables specifying the reference_category category that is used for the Blume-Capel model (details below). Can be any integer value between 0 and no_categories (or \code{no_categories[i]}).
-#' @param repetitions  Numeric. The number of repetitions in the simulation.
-#' @param no_observations Numeric vector. The sample size of the simulated datasets.
-#' @param no_variables Numeric vector. The number of variables in the simulated data.
-#' @param no_categories Numeric vector. The number of ordinal categories (only relevant if level = "Discrete").
-#' @param induce_sparsity Logical. If TRUE then it induces sparsity in the network structure based on the values provided in the \code{density} argument.
-#' @param density Numeric vector. The density/sparsity of the adjacency matrix used to generate the data sets (only relevant if \code{induce_sparsity = TRUE}).
-#' @param irt Logical. If TRUE, an IRT model is used to generate the maximum pseudolikelihood parameters used to generate the simulated data sets (defaults to TRUE).
-#' @param dataset Data frame. In case level = "Discrete" and irt = FALSE, the user can provide a dataset which will be used to generate the maximum pseudolikelihood parameters. Note that the number of variables in the provided data set needs to be equal to or larger than the highest number provided in the argument \code{no_variables}. Also, the number of ordinal categories in the provided data set must be larger than or equal to the number of ordinal categories provided in \code{no_categories}.
-#' @param bc_alpha,bc_beta Numeric. bc_alpha the linear contribution of the Blume-Capel model andbc_beta the quadratic contribution. Defaults to 0.5 and 0.5, respectively.
+#' @param level The type of data to be simulated. It can be either "Gaussian" or "Discrete".
+#' @param variable_type The type of ordinal variables to be simulated if \code{level = "Discrete"}? This can be a single character string specifying the variable type of all p variables at once. Currently, the \code{R} package \code{bgms} supports \code{“ordinal”} and \code{“blume-capel”} variable types. Binary variables are automatically treated as \code{“ordinal”}. Defaults to \code{variable_type = "ordinal"}. For more details see the documentation of the \code{R} package \code{bgms}.
+#' @param reference_category An integer vector of length \code{no_variables} specifying the \code{reference_category} that is used in case \code{variable_type = 'blume-capel'}. Can be any integer value between 0 and no_categories (or \code{no_categories[i]}).
+#' @param repetitions   The number of repetitions in the simulation.
+#' @param no_observations The sample size of the simulated datasets.
+#' @param no_variables The number of variables in the simulated data.
+#' @param no_categories The number of ordinal categories (only relevant if level = "Discrete").
+#' @param induce_sparsity If TRUE then it induces sparsity in the network structure based on the values provided in the \code{density} argument.
+#' @param density The density/sparsity of the adjacency matrix used to generate the data sets (only relevant if \code{induce_sparsity = TRUE}).
+#' @param irt If TRUE, an IRT model is used to generate the maximum pseudolikelihood parameters used to generate the simulated data sets (defaults to TRUE).
+#' @param dataset  In case level = "Discrete" and irt = FALSE, the user can provide a dataset which will be used to generate the maximum pseudolikelihood parameters. Note that the number of variables in the provided data set needs to be equal to or larger than the highest number provided in the argument \code{no_variables}. Also, the number of ordinal categories in the provided data set must be larger than or equal to the number of ordinal categories provided in \code{no_categories}.
+#' @param bc_alpha,bc_beta  bc_alpha the linear contribution of the Blume-Capel model andbc_beta the quadratic contribution. Defaults to 0.5 and 0.5, respectively.
 #'
-#' @return A list containing the generated data, maximum pseudolikelihood estimates (MPLEs) used to generate the data sets, and the adjacency matrices based on the provided required density through the density argument.
+#' @return A list containing the generated data, maximum pseudolikelihood estimates (MPLEs) that were used to generate the data sets, and the graph adjacency matrices based on the provided network density through the \code{density} argument.
 #'
 #' @details The parameters no_observations, no_variables, and no_categories can be specified as vectors to generate data for multiple scenarios in one function call.
 #'

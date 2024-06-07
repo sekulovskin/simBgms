@@ -6,7 +6,7 @@
 #' and estimate those models using the \code{R} packages \strong{bgms} and \strong{BDgraph}. It provides
 #' an easy way to perform simulation studies without requiring advanced programming skills.
 #' The package can parallel the estimation of the models, making the process
-#' computationally efficient.
+#' computationally efficient. Please note that this package is still under development and that the functions may change in future versions.
 
 #' @docType package
 #' @keywords internal

@@ -35,31 +35,31 @@ sim_bgm(
 )
 }
 \arguments{
-\item{level}{Character vector specifying the type of data to simulate and estimate. It can be either "Gaussian" or "Discrete".}
+\item{level}{The type of data to be simulated. It can be either "Gaussian" or "Discrete". The choice of which model (and package) for model estimation depends on this argument. If \code{level = Gaussian} then the package \code{BDgraph} is used, and if \code{level = Discrete} then the package \code{bgms} is used.}
 
-\item{variable_type}{What kind of variables should be simulated if \code{level = "Gaussian"}? Currently this can be a single character string specifying the variable type of all p variables at once. Currently, bgm supports “ordinal” and “blume-capel”. Binary variables are automatically treated as “ordinal’’. Defaults to variable_type = "ordinal". Only relevant if level = "Discrete". For more details see the documentation of the \code{R} package \code{bgms}.}
+\item{variable_type}{The type of ordinal variables to be simulated if \code{level = "Discrete"}? This can be a single character string specifying the variable type of all p variables at once. Currently, the \code{R} package \code{bgms} supports \code{“ordinal”} and \code{“blume-capel”} variable types. Binary variables are automatically treated as \code{“ordinal”}. Defaults to \code{variable_type = "ordinal"}. For more details see the documentation of the \code{R} package \code{bgms}.}
 
-\item{reference_category}{An integer vector of length \code{no_variables} specifying the \code{reference_category} that is used for the Blume-Capel model (details below). Can be any integer value between 0 and no_categories (or \code{no_categories[i]}).}
+\item{reference_category}{An integer vector of length \code{no_variables} specifying the \code{reference_category} that is used in case \code{variable_type = 'blume-capel'}. Can be any integer value between 0 and no_categories (or \code{no_categories[i]}).}
 
-\item{repetitions}{Numeric. The number of repetitions in the simulation. It is recommended to always run at least 10 repetitions in order to ensure stability of the results.}
+\item{repetitions}{The number of repetitions in the simulation. It is recommended to always run at least 10 repetitions in order to ensure stability of the results.}
 
-\item{no_observations}{Numeric. The sample size of the simulated datasets.}
+\item{no_observations}{The sample size of the simulated datasets.}
 
-\item{no_variables}{Numeric. The number of variables in the simulated data.}
+\item{no_variables}{The number of variables in the simulated data.}
 
-\item{no_categories}{Numeric. The number of ordinal categories (only relevant if \code{level = "Discrete"}).}
+\item{no_categories}{The number of ordinal categories (only relevant if \code{level = "Discrete"}).}
 
-\item{induce_sparsity}{Logical. If \code{TRUE} the sparsity is induced on the network structure based on the values provided in the \code{density} argument.}
+\item{induce_sparsity}{If \code{TRUE} the sparsity is induced on the network structure based on the values provided in the \code{density} argument.}
 
-\item{density}{Numeric. The density/sparsity of the adjacency matrix used to generate the data sets (only relevant if \code{induce_sparsity = TRUE}).}
+\item{density}{The density/sparsity of the adjacency matrix used to generate the data sets (only relevant if \code{induce_sparsity = TRUE}).}
 
-\item{irt}{Logical. If \code{TRUE}, data with \code{no_observations = 1000} from an IRT model is used to generate the maximum pseudolikelihood parameters which are then used to generate the simulated data sets for the MRFs (only relevant if \code{level = "Discrete"}).}
+\item{irt}{If \code{TRUE}, data with \code{no_observations = 1000} from an IRT model is used to generate the maximum pseudolikelihood parameters which are then used to generate the simulated data sets for the MRFs (only relevant if \code{level = 'Discrete'}).}
 
-\item{interaction_scale}{Numeric. The interaction_scale parameter for the interaction and edge priors.}
+\item{interaction_scale}{The interaction_scale parameter for the interaction and edge priors.}
 
 \item{no_cores}{The number of CPU cores to use for parallel computation. The parallel computation is only used for the Bayesian analysis, and not for simulating the data. Defaults to the maximum number of cores available on the user's machine.}
 
-\item{edge_prior}{The inclusion or exclusion of individual edges in the network is modeled with binary indicator variables that capture the structure of the network. The argument \code{edge_prior} is used to set a prior distribution for the edge indicator variables, i.e., the structure of the network. Currently, two options are implemented: The Bernoulli model \code{edge_prior = "Bernoulli"} assumes that the probability that an edge between two variables is included is equal to inclusion_probability and independent of other edges or variables. When inclusion_probability = 0.5, this means that each possible network structure is given the same prior weight. The Beta-Bernoulli model \code{edge_prior = "Beta-Bernoulli"} assumes a beta prior for the unknown inclusion probability with shape parameters \code{beta_bernoulli_alpha} and \code{beta_bernoulli_beta}. If \code{beta_bernoulli_alpha = 1} and \code{beta_bernoulli_beta = 1}, this means that networks with the same complexity (number of edges) get the same prior weight. The default is \code{edge_prior = "Bernoulli"}. For more details see the documentation of the \code{R} package \code{bgms}.}
+\item{edge_prior}{The inclusion or exclusion of individual edges in the network is modeled with binary indicator variables that capture the structure of the network. The argument \code{edge_prior} is used to set a prior distribution for the edge indicator variables, i.e., the structure of the network. Currently, two options are implemented: The Bernoulli model \code{edge_prior = 'Bernoulli'} assumes that the probability that an edge between two variables is included is equal to inclusion_probability and independent of other edges or variables. When inclusion_probability = 0.5, this means that each possible network structure is given the same prior weight. The Beta-Bernoulli model \code{edge_prior = 'Beta-Bernoulli'} assumes a beta prior for the unknown inclusion probability with shape parameters \code{beta_bernoulli_alpha} and \code{beta_bernoulli_beta}. If \code{beta_bernoulli_alpha = 1} and \code{beta_bernoulli_beta = 1}, this means that networks with the same complexity (number of edges) get the same prior weight. The default is \code{edge_prior = 'Bernoulli'}. For more details see the documentation of the \code{R} package \code{bgms}.}
 
 \item{threshold_alpha, threshold_beta}{The shape parameters of the beta-prime prior density for the threshold parameters. Must be positive values. If the two values are equal, the prior density is symmetric about zero. If threshold_beta is greater than \code{threshold_alpha}, the distribution is skewed to the left, and if threshold_beta is less than \code{threshold_alpha}, it is skewed to the right. Smaller values tend to lead to more diffuse prior distributions.}
 
@@ -69,25 +69,25 @@ sim_bgm(
 
 \item{beta_bernoulli_alpha, beta_bernoulli_beta}{The two shape parameters of the Beta prior density for the Bernoulli inclusion probability. Must be positive numbers. Defaults to \code{beta_bernoulli_alpha = 1} and \code{beta_bernoulli_beta = 1}.}
 
-\item{dataset}{Data frame or matrix. Only relevant if \code{level = "Discrete"} and \code{irt = FALSE}, the user can provide a dataset which will be used to generate the maximum pseudolikelihood parameters. Note that the number of variables in the provided data set needs to be equal to or larger than the highest number provided in the argument \code{no_variables}. Also, the number of ordinal categories in the provided data set must be larger than or equal to the number of ordinal categories provided in \code{no_categories}.}
+\item{dataset}{Data frame or matrix. Only relevant if \code{level = 'Discrete'} and \code{irt = FALSE}, the user can provide a dataset which will be used to generate the maximum pseudolikelihood parameters. Note that the number of variables in the provided data set needs to be equal to or larger than the highest number provided in the argument \code{no_variables}. Also, the number of ordinal categories in the provided data set must be larger than or equal to the number of ordinal categories provided in \code{no_categories}.}
 
-\item{save}{Logical. If \code{TRUE}, the samples fro the MCMC algorithm are saved from all the iterations \code{iter}. Only avialable when \code{level = "Discrete"}.}
+\item{save}{If \code{TRUE}, the samples fro the MCMC algorithm are saved from all the iterations \code{iter}. Only avialable when \code{level = 'Discrete'}.}
 
-\item{df.prior}{Numeric. The degrees of freedom for the prior distribution of the precision matrix (only relevant if \code{level = "Gaussian"}).}
+\item{df.prior}{The degrees of freedom for the prior distribution of the precision matrix (only relevant if \code{level = 'Gaussian'}).}
 
-\item{algorithm}{Character. The algorithm to use for estimating the Gaussian Graphical Model (only relevant if \code{level = "Gaussian"}).}
+\item{algorithm}{The algorithm to use for estimating the Gaussian Graphical Model (only relevant if \code{level = 'Gaussian'}).}
 
-\item{bc_alpha, bc_beta}{Numeric. \code{bc_alpha} the linear contribution of the Blume-Capel model and \code{bc_beta} the quadratic contribution. Defaults to 0.5 and 0.5, respectively.}
+\item{bc_alpha, bc_beta}{\code{bc_alpha} the linear contribution of the Blume-Capel model and \code{bc_beta} the quadratic contribution. Defaults to 0.5 and 0.5, respectively.}
 
-\item{iter}{Numeric. The number of iterations for the MCMC algorithm.}
+\item{iter}{The number of iterations for the MCMC algorithm.}
 
-\item{burnin}{Numeric. The number of burn-in iterations for the MCMC algorithm.}
+\item{burnin}{The number of burn-in iterations for the MCMC algorithm.}
 }
 \value{
 A list containing: (i) a data frame with the summarized results (only if \code{save = FALSE}), averaged across \code{repetitions}; (ii) a list with the estimated models; (iii) the simulated data sets; (iv) the maximum pseudolikelihood parameters or precision matrices; (v) the graph adjacency matrices; and (vi) a data frame with the parameter grid for an overview of the design of the simulation.
 }
 \description{
-This is the main function of the package. The function simulates data from either a Gaussian or Discrete (ordinal or binary) Markov Random Field (MRF) and estimates the model parameters using Bayesian inference using the \code{R} packages \code{BDgraph} and \code{bgms}. It provides flexibility in specifying the data characteristics as well as the edge and structure priors. The package is able to parallelize the estimation of the models using multiple cores, providing computational efficiency when running large simulation studies.
+This is the main function of the package. The function simulates data from either a Gaussian or Discrete (ordinal or binary) Markov Random Field (MRF) and estimates the model parameters using Bayesian model averaging methods by utilizing the \code{R} packages \code{BDgraph} or \code{bgms} (depending on the variable type). The function provides flexibility in specifying the data characteristics as well as the edge weight and network structure priors. The function is able to parallelize the estimation of the models using multiple cores, providing computational efficiency when running large simulation studies. The output is summarized in a ready-to-plot data frame.
 }
 \details{
 This function integrates the simulation and estimation process for Bayesian Graphical Models. It provides options for parallel computation using multiple CPU cores.

@@ -32,35 +32,35 @@ estimate_models(
 )
 }
 \arguments{
-\item{level}{Character vector specifying the type of data. It can be either "Gaussian" or "Discrete".}
+\item{level}{The type of data. It can be either "Gaussian" or "Discrete". The choice of which model (and package) for model estimation depends on this argument. If \code{level = Gaussian} then the package \code{BDgraph} is used, and if \code{level = Discrete} then the package \code{bgms} is used.}
 
-\item{variable_type}{What kind of variables should be simulated? Currently this can be a single character string specifying the variable type of all p variables at once. Currently, bgm supports “ordinal” and “blume-capel”. Binary variables are automatically treated as “ordinal’’. Defaults to variable_type = "ordinal". Only relevant if level = "Discrete".}
+\item{variable_type}{The type of ordinal variables, if \code{level = "Discrete"}? This can be a single character string specifying the variable type of all p variables at once. Currently, the \code{R} package \code{bgms} supports \code{“ordinal”} and \code{“blume-capel”} variable types. Binary variables are automatically treated as \code{“ordinal”}. Defaults to \code{variable_type = "ordinal"}. For more details see the documentation of the \code{R} package \code{bgms}.}
 
-\item{reference_category}{An integer vector of length no_variables specifying the reference_category category that is used for the Blume-Capel model (details below). Can be any integer value between 0 and no_categories (or \code{no_categories[i]}).}
+\item{reference_category}{An integer vector of length \code{no_variables} specifying the \code{reference_category} that is used in case \code{variable_type = 'blume-capel'}. Can be any integer value between 0 and no_categories (or \code{no_categories[i]}).}
 
-\item{repetitions}{Numeric. The number of repetitions in the simulation.}
+\item{repetitions}{The number of repetitions in the simulation.}
 
-\item{data}{List. The simulated data sets.}
+\item{data}{The simulated data sets.}
 
-\item{no_observations}{Numeric. The sample size of the simulated datasets.}
+\item{no_observations}{The sample size of the simulated datasets.}
 
-\item{no_variables}{Numeric. The number of variables in the simulated data.}
+\item{no_variables}{The number of variables in the simulated data.}
 
-\item{no_categories}{Numeric. The number of ordinal categories (only relevant if level = "Discrete").}
+\item{no_categories}{The number of ordinal categories (only relevant if level = "Discrete").}
 
-\item{interaction_scale}{Numeric. The interaction_scale parameter for the interaction prior (only relevant if level = "Discrete").}
+\item{interaction_scale}{The interaction_scale parameter for the interaction prior (only relevant if level = "Discrete").}
 
-\item{iter}{Numeric. The number of iterations for the estimation algorithm.}
+\item{iter}{The number of iterations for the estimation algorithm.}
 
-\item{induce_sparsity}{Logical. If TRUE then it induces sparsity in the network structure based on the values provided in the \code{density} argument.}
+\item{induce_sparsity}{If TRUE then it induces sparsity in the network structure based on the values provided in the \code{density} argument.}
 
-\item{density}{Numeric. The density/sparsity of the adjacency matrix used to generate the data sets (only relevant if \code{induce_sparsity = TRUE}).}
+\item{density}{The density/sparsity of the adjacency matrix used to generate the data sets (only relevant if \code{induce_sparsity = TRUE}).}
 
 \item{no_cores}{The number of CPU cores to use for parallel computation. The parallel computation is only used for the Bayesian analysis, and not for simulating the data. Defaults to the maximum number of cores available on the user's machine.}
 
-\item{save}{Logical. If TRUE, the samples fro the MCMC algorithm are saved from all the iterations \code{iter}. Only possible when level = "Discrete".}
+\item{save}{If TRUE, the samples fro the MCMC algorithm are saved from all the iterations \code{iter}. Only possible when level = "Discrete".}
 
-\item{edge_prior}{Character. The prior distribution for the edge parameters (only relevant if level = "Discrete").}
+\item{edge_prior}{The prior distribution for the edge parameters (only relevant if level = "Discrete").}
 
 \item{threshold_alpha, threshold_beta}{The shape parameters of the beta-prime prior density for the threshold parameters. Must be positive values. If the two values are equal, the prior density is symmetric about zero. If threshold_beta is greater than threshold_alpha, the distribution is skewed to the left, and if threshold_beta is less than threshold_alpha, it is skewed to the right. Smaller values tend to lead to more diffuse prior distributions.}
 
@@ -70,11 +70,11 @@ estimate_models(
 
 \item{beta_bernoulli_alpha, beta_bernoulli_beta}{The two shape parameters of the Beta prior density for the Bernoulli inclusion probability. Must be positive numbers. Defaults to beta_bernoulli_alpha = 1 and beta_bernoulli_beta = 1.}
 
-\item{df.prior}{Numeric. The degrees of freedom for the prior distribution of the precision matrix (only relevant if level = "Gaussian").}
+\item{df.prior}{The degrees of freedom for the prior distribution of the precision matrix (only relevant if level = "Gaussian").}
 
-\item{algorithm}{Character. The algorithm to use for estimating the Gaussian Graphical Model (only relevant if level = "Gaussian").}
+\item{algorithm}{The algorithm to use for estimating the Gaussian Graphical Model (only relevant if level = "Gaussian").}
 
-\item{burnin}{Numeric. The number of burn-in iterations for the MCMC algorithm}
+\item{burnin}{The number of burn-in iterations for the MCMC algorithm}
 }
 \value{
 A list containing the estimated Bayesian Graphical Models and the associated parameter gird.
