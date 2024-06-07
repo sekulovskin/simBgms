@@ -63,12 +63,12 @@ summarize <- function(est,
     thetas[[i]] <- est[[i]][2]
   }
 
-  # take the lower triangular part of the matrix ----------------------------
+  # take the upper triangular part of the matrix ----------------------------
 
   gammas_1 <- list()
   thetas_1 <- list()
   for(i in 1:length(est)){
-    gammas_1[[i]] <- gammas[[i]][[1]][upper.tri(gammas[[i]][[1]])] # check
+    gammas_1[[i]] <- gammas[[i]][[1]][upper.tri(gammas[[i]][[1]])]
     thetas_1[[i]] <- thetas[[i]][[1]][upper.tri(thetas[[i]][[1]])]
   }
 
