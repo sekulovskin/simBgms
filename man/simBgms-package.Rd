@@ -13,8 +13,4 @@ an easy way to perform simulation studies without requiring advanced programming
 The package can parallel the estimation of the models, making the process
 computationally efficient.
 }
-\author{
-\strong{Maintainer}: Nikola Sekulovski \email{n.sekulovski@uva.nl} (\href{https://orcid.org/orcid.org/0000-0001-7032-1684}{ORCID})
-
-}
 \keyword{internal}

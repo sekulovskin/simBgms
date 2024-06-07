@@ -15,16 +15,16 @@ summarize <- function(est,
   # Count the instances with error messages
   error_count <- sum(sapply(est, function(x) is.character(x) && !is.list(x)))
   if(error_count/length(est) != 0){
-    warning("Some models have not converged during the estimation
-            process. In post-processing, these non-converged models
-            are replaced with models from the same simulation settings
-            that did converge. To identify the failed models, inspect
-            the list of estimated models in the output and compare
+    warning("It seems that the models for some data sets have failed
+            during the estimationprocess. In post-processing, these
+            non-converged models are replaced with models from the same
+            simulation settings that did converge. To identify the failed models,
+            inspect the list of estimated models in the output and compare
             their indices with those in the parameter grid.
             If a significant number of models have failed to converge,
-            this might cause errors in the post-processing process.
+            this might cause errors in the post-processing.
             If you encounter such issues, consider adjusting the
-            data generation process and retrying. If the problem
+            data generating process. If the problem
             persists, please contact the package maintainer.")
 
 

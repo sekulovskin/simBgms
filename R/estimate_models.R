@@ -2,29 +2,29 @@
 #'
 #' This function estimates Bayesian Graphical Models (BGM) using either the `bgms` or `BDGraph` R packages, depending on the level of measurement specified. It supports parallelization for efficient computation on multiple CPU cores.
 #'
-#' @param level Character vector specifying the type of data. It can be either "Gaussian" or "Discrete".
-#' @param variable_type What kind of variables should be simulated? Currently this can be a single character string specifying the variable type of all p variables at once. Currently, bgm supports “ordinal” and “blume-capel”. Binary variables are automatically treated as “ordinal’’. Defaults to variable_type = "ordinal". Only relevant if level = "Discrete".
-#' @param reference_category An integer vector of length no_variables specifying the reference_category category that is used for the Blume-Capel model (details below). Can be any integer value between 0 and no_categories (or \code{no_categories[i]}).
-#' @param repetitions  Numeric. The number of repetitions in the simulation.
-#' @param data List. The simulated data sets.
-#' @param no_observations Numeric. The sample size of the simulated datasets.
-#' @param no_variables Numeric. The number of variables in the simulated data.
-#' @param no_categories Numeric. The number of ordinal categories (only relevant if level = "Discrete").
-#' @param interaction_scale Numeric. The interaction_scale parameter for the interaction prior (only relevant if level = "Discrete").
-#' @param iter Numeric. The number of iterations for the estimation algorithm.
-#' @param induce_sparsity Logical. If TRUE then it induces sparsity in the network structure based on the values provided in the \code{density} argument.
-#' @param density Numeric. The density/sparsity of the adjacency matrix used to generate the data sets (only relevant if \code{induce_sparsity = TRUE}).
+#' @param level The type of data. It can be either "Gaussian" or "Discrete". The choice of which model (and package) for model estimation depends on this argument. If \code{level = Gaussian} then the package \code{BDgraph} is used, and if \code{level = Discrete} then the package \code{bgms} is used.
+#' @param variable_type The type of ordinal variables, if \code{level = "Discrete"}? This can be a single character string specifying the variable type of all p variables at once. Currently, the \code{R} package \code{bgms} supports \code{“ordinal”} and \code{“blume-capel”} variable types. Binary variables are automatically treated as \code{“ordinal”}. Defaults to \code{variable_type = "ordinal"}. For more details see the documentation of the \code{R} package \code{bgms}.
+#' @param reference_category An integer vector of length \code{no_variables} specifying the \code{reference_category} that is used in case \code{variable_type = 'blume-capel'}. Can be any integer value between 0 and no_categories (or \code{no_categories[i]}).
+#' @param repetitions  The number of repetitions in the simulation.
+#' @param data The simulated data sets.
+#' @param no_observations The sample size of the simulated datasets.
+#' @param no_variables The number of variables in the simulated data.
+#' @param no_categories The number of ordinal categories (only relevant if level = "Discrete").
+#' @param interaction_scale The interaction_scale parameter for the interaction prior (only relevant if level = "Discrete").
+#' @param iter The number of iterations for the estimation algorithm.
+#' @param induce_sparsity If TRUE then it induces sparsity in the network structure based on the values provided in the \code{density} argument.
+#' @param density The density/sparsity of the adjacency matrix used to generate the data sets (only relevant if \code{induce_sparsity = TRUE}).
 #' @param no_cores  The number of CPU cores to use for parallel computation. The parallel computation is only used for the Bayesian analysis, and not for simulating the data. Defaults to the maximum number of cores available on the user's machine.
 #' @param edge_prior The inclusion or exclusion of individual edges in the network is modeled with binary indicator variables that capture the structure of the network. The argument edge_prior is used to set a prior distribution for the edge indicator variables, i.e., the structure of the network. Currently, two options are implemented: The Bernoulli model edge_prior = "Bernoulli" assumes that the probability that an edge between two variables is included is equal to inclusion_probability and independent of other edges or variables. When inclusion_probability = 0.5, this means that each possible network structure is given the same prior weight. The Beta-Bernoulli model edge_prior = "Beta-Bernoulli" assumes a beta prior for the unknown inclusion probability with shape parameters beta_bernoulli_alpha and beta_bernoulli_beta. If beta_bernoulli_alpha = 1 and beta_bernoulli_beta = 1, this means that networks with the same complexity (number of edges) get the same prior weight. The default is edge_prior = "Bernoulli"
 #' @param threshold_alpha,threshold_beta The shape parameters of the beta-prime prior density for the threshold parameters. Must be positive values. If the two values are equal, the prior density is symmetric about zero. If threshold_beta is greater than threshold_alpha, the distribution is skewed to the left, and if threshold_beta is less than threshold_alpha, it is skewed to the right. Smaller values tend to lead to more diffuse prior distributions.
 #' @param edge_selection Should the function perform Bayesian edge selection on the edges of the MRF in addition to estimating its parameters (edge_selection = TRUE), or should it just estimate the parameters (edge_selection = FALSE)? The default is edge_selection = TRUE.
 #' @param inclusion_probability	 The prior edge inclusion probability for the Bernoulli model. Can be a single probability, or a matrix of p rows and p columns specifying an inclusion probability for each edge pair. The default is inclusion_probability = 0.5. Corresponds to the g.prior argument in the BDgraph package.
 #' @param beta_bernoulli_alpha,beta_bernoulli_beta The two shape parameters of the Beta prior density for the Bernoulli inclusion probability. Must be positive numbers. Defaults to beta_bernoulli_alpha = 1 and beta_bernoulli_beta = 1.
-#' @param edge_prior Character. The prior distribution for the edge parameters (only relevant if level = "Discrete").
-#' @param save Logical. If TRUE, the samples fro the MCMC algorithm are saved from all the iterations \code{iter}. Only possible when level = "Discrete".
-#' @param df.prior Numeric. The degrees of freedom for the prior distribution of the precision matrix (only relevant if level = "Gaussian").
-#' @param algorithm Character. The algorithm to use for estimating the Gaussian Graphical Model (only relevant if level = "Gaussian").
-#' @param burnin Numeric. The number of burn-in iterations for the MCMC algorithm
+#' @param edge_prior  The prior distribution for the edge parameters (only relevant if level = "Discrete").
+#' @param save If TRUE, the samples fro the MCMC algorithm are saved from all the iterations \code{iter}. Only possible when level = "Discrete".
+#' @param df.prior The degrees of freedom for the prior distribution of the precision matrix (only relevant if level = "Gaussian").
+#' @param algorithm The algorithm to use for estimating the Gaussian Graphical Model (only relevant if level = "Gaussian").
+#' @param burnin The number of burn-in iterations for the MCMC algorithm
 #' @return A list containing the estimated Bayesian Graphical Models and the associated parameter gird.
 #'
 #' @details This function estimates BGMs using either the `bgms` or `BDGraph` R packages, depending on the specified level. It parallelizes the estimation process for efficient computation.
