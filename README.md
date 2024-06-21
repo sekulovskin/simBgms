@@ -4,6 +4,8 @@
 
 The `simBgms` package in R provides a simplified approach to running simulation studies for Bayesian graphical modeling. Typically, researchers want to make decisions about sample size, number of observations, and the specific choices of prior distributions to use. With this package, users can easily simulate data for Markov random field models and then estimate these models using the `bgms` and `BDgraph` packages in R. The package streamlines the process of running simulation studies, eliminating the need for advanced programming skills. In addition, the package provides the ability to parallelize model estimation, which increases computational efficiency.
 
+**Please note** that there has been an update to the options for simulating the data! Therefore, readers who come to this site as a result of reading Sekulovski et al. (2024) should refer to the updated documentation.
+
 ## Key Features
 
 - Simulate data for Markov random field models.
@@ -32,9 +34,10 @@ sim_bgm(level = "Discrete",
         no_observations = c(100, 500), 
         no_variables = c(5, 10),
         no_categories = c(1, 2), 
+        ordinal_sim_type = "irt",
+        induce_sparsity = TRUE,
         induce_sparsity = FALSE,
-        density = c(0.1, 0.5, 0.9), 
-        irt = TRUE)
+        density = c(0.1, 0.5, 0.9))
 ```
 
 For detailed usage instructions and examples, please refer to the package documentation.
@@ -46,3 +49,7 @@ Contributions to `simBgms` are welcome! If you encounter any issues or have sugg
 ## License
 
 This package is licensed under the [MIT License](https://opensource.org/licenses/MIT). See the LICENSE file for more details.
+
+## References
+
+Sekulovski, N., Keetelaar, S., Haslbeck, J. M. B., & Marsman, M. (2024). Sensitivity analysis of prior distributions in bayesian graphical modeling: Guiding informed prior choices for conditional independence testing. Advances in Psychology, 2. https://doi.org/10.56296/aip00016/
