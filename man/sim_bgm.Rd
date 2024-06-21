@@ -12,9 +12,12 @@ sim_bgm(
   no_observations,
   no_variables,
   no_categories,
+  ordinal_sim_type = c("irt", "dataset", "parameters"),
   induce_sparsity = TRUE,
   density = 0.5,
-  irt = TRUE,
+  dataset = NULL,
+  thresholds = NULL,
+  interactions = NULL,
   interaction_scale = 2.5,
   no_cores = NULL,
   edge_prior = "Bernoulli",
@@ -24,7 +27,6 @@ sim_bgm(
   inclusion_probability = 0.5,
   beta_bernoulli_alpha = 1,
   beta_bernoulli_beta = 1,
-  dataset,
   save = FALSE,
   df.prior = 3,
   algorithm = "bdmcmc",
@@ -49,11 +51,17 @@ sim_bgm(
 
 \item{no_categories}{The number of ordinal categories (only relevant if \code{level = "Discrete"}).}
 
-\item{induce_sparsity}{If \code{TRUE} the sparsity is induced on the network structure based on the values provided in the \code{density} argument.}
+\item{ordinal_sim_type}{The mechanism for obtaining the parameters for simulating ordinal data. It can be \code{irt}, so that maximum pseudolikelihood estimates are obtained from an IRT data set (this is the recommended option if you would like to control for different sparsity levels of the graph), \code{dataset}, so that the user provides a data set to obtain the maximum pseudolikelihood estimates, or \code{parameters}, so that the user provides the thresholds and interactions to simulate the data (specified through the \code{thrseholds} and \code{interactions} arguments. Defaults to \code{irt}.}
+
+\item{induce_sparsity}{If \code{TRUE} the sparsity is induced on the network structure based on the values provided in the \code{density} argument. Only relevant if \code{ordinal_sim_type = 'irt'}.}
 
 \item{density}{The density/sparsity of the adjacency matrix used to generate the data sets (only relevant if \code{induce_sparsity = TRUE}).}
 
-\item{irt}{If \code{TRUE}, data with \code{no_observations = 1000} from an IRT model is used to generate the maximum pseudolikelihood parameters which are then used to generate the simulated data sets for the MRFs (only relevant if \code{level = 'Discrete'}).}
+\item{dataset}{Data frame or matrix. Only relevant if \code{level = 'Discrete'} and \code{irt = FALSE}, the user can provide a dataset which will be used to generate the maximum pseudolikelihood parameters. Note that the number of variables in the provided data set needs to be equal to or larger than the highest number provided in the argument \code{no_variables}. Also, the number of ordinal categories in the provided data set must be larger than or equal to the number of ordinal categories provided in \code{no_categories}.}
+
+\item{thresholds}{In case level = "Discrete" and \code{ordinal_sim_type = 'parameters'}, the user can provide a matrix containing the thresholds for the ordinal variables. The matrix should have the same number of rows as the maximum number of variables and the same number of columns as the maximum number of categories minus one.}
+
+\item{interactions}{In case level = "Discrete" and \code{ordinal_sim_type = 'parameters'}, the user can provide a matrix containing the interaction parameters for the ordinal variables. The matrix should be symmetric with zeros on the diagonal.}
 
 \item{interaction_scale}{The interaction_scale parameter for the interaction and edge priors.}
 
@@ -68,8 +76,6 @@ sim_bgm(
 \item{inclusion_probability}{The prior edge inclusion probability for the Bernoulli model. Can be a single probability, or a matrix of p rows and p columns specifying an inclusion probability for each edge pair. The default is \code{inclusion_probability = 0.5}.}
 
 \item{beta_bernoulli_alpha, beta_bernoulli_beta}{The two shape parameters of the Beta prior density for the Bernoulli inclusion probability. Must be positive numbers. Defaults to \code{beta_bernoulli_alpha = 1} and \code{beta_bernoulli_beta = 1}.}
-
-\item{dataset}{Data frame or matrix. Only relevant if \code{level = 'Discrete'} and \code{irt = FALSE}, the user can provide a dataset which will be used to generate the maximum pseudolikelihood parameters. Note that the number of variables in the provided data set needs to be equal to or larger than the highest number provided in the argument \code{no_variables}. Also, the number of ordinal categories in the provided data set must be larger than or equal to the number of ordinal categories provided in \code{no_categories}.}
 
 \item{save}{If \code{TRUE}, the samples fro the MCMC algorithm are saved from all the iterations \code{iter}. Only avialable when \code{level = 'Discrete'}.}
 
@@ -100,9 +106,9 @@ sim_bgm(level = "Discrete",
         no_observations = 100,
         no_variables = c(5, 6),
         no_categories = 3,
+        ordinal_sim_type = "irt",
         induce_sparsity = TRUE,
         density = 0.5,
-        irt = TRUE,
         interaction_scale = 1,
         no_cores = 2,
         iter = 1e4)

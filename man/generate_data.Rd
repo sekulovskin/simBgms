@@ -12,12 +12,14 @@ generate_data(
   no_observations,
   no_variables,
   no_categories,
+  ordinal_sim_type = c("irt", "dataset", "parameters"),
   induce_sparsity = TRUE,
   density = 0.5,
-  irt = TRUE,
-  dataset,
-  bc_alpha,
-  bc_beta
+  dataset = NULL,
+  thresholds = NULL,
+  interactions = NULL,
+  bc_alpha = 0.5,
+  bc_beta = 0.5
 )
 }
 \arguments{
@@ -35,18 +37,22 @@ generate_data(
 
 \item{no_categories}{The number of ordinal categories (only relevant if level = "Discrete").}
 
-\item{induce_sparsity}{If TRUE then it induces sparsity in the network structure based on the values provided in the \code{density} argument.}
+\item{ordinal_sim_type}{The mechanism for obtaining the parameters for simulating ordinal data. It can be \code{irt}, so that maximum pseudolikelihood estimates are obtained from an IRT data set (this is the recommended option if you would like to control for different sparsity levels of the graph), \code{dataset}, so that the user provides a data set to obtain the maximum pseudolikelihood estimates, or \code{parameters}, so that the user provides the thresholds and interactions to simulate the data (specified through the \code{thrseholds} and \code{interactions} arguments. Defaults to \code{irt}.}
+
+\item{induce_sparsity}{If TRUE then it induces sparsity in the network structure based on the values provided in the \code{density} argument. Only relevant if \code{ordinal_sim_type = 'irt'}. Defaults to TRUE.}
 
 \item{density}{The density/sparsity of the adjacency matrix used to generate the data sets (only relevant if \code{induce_sparsity = TRUE}).}
 
-\item{irt}{If TRUE, an IRT model is used to generate the maximum pseudolikelihood parameters used to generate the simulated data sets (defaults to TRUE).}
+\item{dataset}{In case level = "Discrete" and \code{ordinal_sim_type = 'dataset'}, the user can provide a dataset which will be used to generate the maximum pseudolikelihood parameters. Note that the number of variables in the provided data set needs to be equal to or larger than the highest number provided in the argument \code{no_variables}. Also, the number of ordinal categories in the provided data set must be larger than or equal to the number of ordinal categories provided in \code{no_categories}.}
 
-\item{dataset}{In case level = "Discrete" and irt = FALSE, the user can provide a dataset which will be used to generate the maximum pseudolikelihood parameters. Note that the number of variables in the provided data set needs to be equal to or larger than the highest number provided in the argument \code{no_variables}. Also, the number of ordinal categories in the provided data set must be larger than or equal to the number of ordinal categories provided in \code{no_categories}.}
+\item{thresholds}{In case level = "Discrete" and \code{ordinal_sim_type = 'parameters'}, the user can provide a matrix containing the thresholds for the ordinal variables. The matrix should have the same number of rows as the maximum number of variables and the same number of columns as the maximum number of categories minus one.}
+
+\item{interactions}{In case level = "Discrete" and \code{ordinal_sim_type = 'parameters'}, the user can provide a matrix containing the interaction parameters for the ordinal variables. The matrix should be symmetric with zeros on the diagonal.}
 
 \item{bc_alpha, bc_beta}{bc_alpha the linear contribution of the Blume-Capel model andbc_beta the quadratic contribution. Defaults to 0.5 and 0.5, respectively.}
 }
 \value{
-A list containing the generated data, maximum pseudolikelihood estimates (MPLEs) used to generate the data sets, and the adjacency matrices based on the provided required density through the density argument.
+A list containing the generated data, maximum pseudolikelihood estimates (MPLEs) that were used to generate the data sets, and the graph adjacency matrices based on the provided network density through the \code{density} argument.
 }
 \description{
 This function generates data from a Markov Random Field (MRF) model, which can either be Gaussian or Discrete. For the Discrete case, the function can generate data from an Item Response Theory (IRT) model if specified. The generated data can be used for various simulation studies.
@@ -63,6 +69,6 @@ generate_data(level = "Discrete",
               no_variables = 15,
               no_categories = 4,
               induce_sparsity = TRUE,
-              density = 0.1,
-              irt = TRUE)
+              ordinal_sim_type = "irt",
+              density = 0.1)
 }
