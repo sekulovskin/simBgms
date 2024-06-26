@@ -52,4 +52,5 @@ This package is licensed under the [MIT License](https://opensource.org/licenses
 
 ## References
 
-Sekulovski, N., Keetelaar, S., Haslbeck, J. M. B., & Marsman, M. (2024). Sensitivity analysis of prior distributions in bayesian graphical modeling: Guiding informed prior choices for conditional independence testing. Advances in Psychology, 2. https://doi.org/10.56296/aip00016/
+Sekulovski, N., Keetelaar, S., Haslbeck, J., & Marsman, M. (2024). Sensitivity analysis of prior distributions in Bayesian graphical modeling: Guiding informed prior choices for conditional independence testing. advances.in/psychology, 2, e92355. https://doi.org/10.56296/aip00016
+
