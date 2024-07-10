@@ -63,6 +63,33 @@ generate_data <- function(level = c("Gaussian", "Discrete"),
           gen_data[[i]] <- generate_IRT_data(max(no_variables), 1e3,
                                              no_categories[i])
         }
+
+        MPLEs <- list()
+        for(h in 1:length(no_categories)) {
+          MPLEs[[h]] <- list()
+          for (i in 1:length(no_variables)) {
+            MPLEs[[h]][[i]] <- list()
+            for (j in 1:length(density)) {
+              tries <- 0
+              while (tries < 10) {
+                tries <- tries + 1
+                tryCatch({
+                  MPLEs[[h]][[i]][[j]] <- mple_G(x = gen_data[[h]][, c(1:no_variables[i])],
+                                                 G = sparsity_matrix[[i]][[j]])
+                }, error = function(e) {
+                  if (tries == 10) {
+                    stop("Failed to compute MPLEs after 10 attempts.
+                       Please supply different value(s) for the density of the
+                       network or try re-running the example with a different seed.")
+                  } else {
+                    sparsity_matrix <- sparsity(density, no_variables)
+                  }
+                })
+              }
+            }
+          }
+        }
+
       } else {
         density <- 1
         sparsity_matrix <- NULL
@@ -72,40 +99,41 @@ generate_data <- function(level = c("Gaussian", "Discrete"),
           gen_data[[i]] <- generate_IRT_data(max(no_variables), 1e3,
                                              no_categories[i])
         }
-      }
 
-      # estimate the MLE parameters
-
-
-      MPLEs <- list()
-      for(h in 1:length(no_categories)) {
-        MPLEs[[h]] <- list()
-        for (i in 1:length(no_variables)) {
-          MPLEs[[h]][[i]] <- list()
-          for (j in 1:length(density)) {
-            tries <- 0
-            while (tries < 10) {
-              tries <- tries + 1
-              tryCatch({
-                MPLEs[[h]][[i]][[j]] <- mple(x = gen_data[[h]][, c(1:no_variables[i])])
-              }, error = function(e) {
-                if (tries == 10) {
-                  stop("Failed to compute MPLEs after 10 attempts.
+        MPLEs <- list()
+        for(h in 1:length(no_categories)) {
+          MPLEs[[h]] <- list()
+          for (i in 1:length(no_variables)) {
+            MPLEs[[h]][[i]] <- list()
+            for (j in 1:length(density)) {
+              tries <- 0
+              while (tries < 10) {
+                tries <- tries + 1
+                tryCatch({
+                  MPLEs[[h]][[i]][[j]] <- mple(x = gen_data[[h]][, c(1:no_variables[i])])
+                }, error = function(e) {
+                  if (tries == 10) {
+                    stop("Failed to compute MPLEs after 10 attempts.
                        Please supply different value(s) for the density of the
                        network or try re-running the example with a different seed.")
-                } else {
-                  sparsity_matrix <- sparsity(density, no_variables)
-                }
-              })
+                  } else {
+                    sparsity_matrix <- sparsity(density, no_variables)
+                  }
+                })
+              }
             }
           }
         }
+
       }
+
+
+
     } else if (ordinal_sim_type == "dataset"){# end of irt
       induce_sparsity <- FALSE
       density <- 1
       sparsity_matrix <- NULL
-      warning("Since you will be providing a dataset or your own, the
+      warning("Since you will be providing a dataset or your own, the argument
             induce_sparsity is automatically set to FALSE.")
 
         if (ncol(dataset) < max(no_variables)) {
@@ -184,7 +212,8 @@ generate_data <- function(level = c("Gaussian", "Discrete"),
             }
           }
         }
-      }
+       }
+
     data <- generate_omrf_data(repetitions  = repetitions,
                                variable_type = variable_type,
                                reference_category = reference_category,
