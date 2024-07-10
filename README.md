@@ -2,10 +2,9 @@
 
 ## Description
 
-The `simBgms` package in R offers a streamlined approach to conducting simulation studies for Bayesian graphical models. Researchers often need to make decisions about sample size, number of observations, and choice of prior distributions prior to collecting and analyzing their empricial data. This package allows users to easily simulate data for Markov random field models and estimate these models using the `bgms` and `BDgraph` packages in R. It simplifies the process of running simulation studies, removing the necessity for advanced programming skills. Additionally, the package supports parallelized model estimation, enhancing computational efficiency.
+Researchers often need to make decisions about sample size, number of observations, and choice of prior distributions before collecting and analyzing their empirical data. The `simBgms` package in R provides a streamlined approach to conducting simulation studies for the Bayesian analysis of Markov random field graphical models. This package allows users to easily simulate data for Markov random field models and estimate these models using the `bgms` and `BDgraph` packages in R. It simplifies the process of running simulation studies and eliminates the need for advanced programming skills. In addition, the package supports parallelized model estimation, which increases computational efficiency.
 
-**Please note** that there has been an update to the options for simulating the data! Therefore, users who come to this repository as a result of reading Sekulovski et al. (2024)
-should refer to the updated package documentation.
+**Please note** that there has been a major update to the data simulation options! Therefore, users who come to this repository as a result of reading the Sekulovski et al. (2024) paper should refer to the should read the updated package documentation.
 
 ## Key Features
 
