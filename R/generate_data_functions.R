@@ -1,5 +1,8 @@
 #' @importFrom stats rbinom rnorm runif
 #'
+#' @export
+#'
+#'
 # Generate data from an IRT model ==============================================
 
 generate_IRT_data <- function(no_variables,
