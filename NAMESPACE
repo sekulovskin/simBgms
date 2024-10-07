@@ -3,6 +3,7 @@
 export(estimate_models)
 export(generate_data)
 export(sim_bgm)
+export(generate_IRT_data)
 importFrom(Rcpp,evalCpp)
 importFrom(Rdpack,reprompt)
 importFrom(foreach,"%dopar%")
