@@ -16,7 +16,7 @@ summarize <- function(est,
   error_count <- sum(sapply(est, function(x) is.character(x) && !is.list(x)))
   if(error_count/length(est) != 0){
     warning("It seems that the models for some data sets have failed
-            during the estimationprocess. In post-processing, these
+            during the estimation process. In the post-processing, these
             non-converged models are replaced with models from the same
             simulation settings that did converge. To identify the failed models,
             inspect the list of estimated models in the output and compare
