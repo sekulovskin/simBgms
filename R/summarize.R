@@ -72,10 +72,7 @@ summarize <- function(est,
     thetas_1[[i]] <- thetas[[i]][[1]][upper.tri(thetas[[i]][[1]])]
   }
 
-
   if(level == "Discrete"){ # For discrete networks
-
-
     param_grid <- expand.grid(
       s = interaction_scale,
       k = no_categories,
@@ -423,7 +420,7 @@ summarize <- function(est,
                        "mean_posterior_partial_correlation")
 
 
-      }# END OF else STATEMENT
+      }   # END OF else STATEMENT
 
   return(full)
 
