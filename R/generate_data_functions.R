@@ -114,7 +114,7 @@ generate_ggm_data <- function(repetitions,
 
 
 
-  # generate precision matrices according to the required nework density
+  # generate precision matrices according to the required network density
 
   for(j in 1:length(no_variables)){
     for(k in 1:length(density)){
@@ -150,7 +150,7 @@ generate_omrf_data <- function(repetitions,
                                no_observations,
                                no_variables,
                                no_categories,
-                               iter = 1e3,
+                               iter,
                                density,
                                MPLEs,
                                bc_alpha,

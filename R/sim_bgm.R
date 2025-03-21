@@ -76,7 +76,8 @@ sim_bgm <- function(level = c("Gaussian", "Discrete"),
                     bc_alpha = 0.5,
                     bc_beta = -0.5,
                     iter = 1e4,
-                    burnin = 1e3) {
+                    burnin = 1e3,
+                    average = TRUE) {
 
   # Set default number of cores if not specified by user
   if(is.null(no_cores)) {
@@ -155,7 +156,9 @@ sim_bgm <- function(level = c("Gaussian", "Discrete"),
                              no_variables = no_variables,
                              no_categories = no_categories,
                              interaction_scale = interaction_scale,
-                             density = density)
+                             density = density,
+                             adj_mat = data[[3]],
+                             average = average)
 
         output <- list("summarized results" = summary,
                        "estimated models" = est[[1]],
@@ -206,7 +209,6 @@ sim_bgm <- function(level = c("Gaussian", "Discrete"),
                        "parameter grid" = est[[2]])
       } else{
 
-
         summary <- summarize(est = est[[1]],
                              level = "Gaussian",
                              repetitions  = repetitions,
@@ -214,7 +216,9 @@ sim_bgm <- function(level = c("Gaussian", "Discrete"),
                              no_variables = no_variables,
                              no_categories = no_categories,
                              interaction_scale = interaction_scale,
-                             density = density)
+                             density = density,
+                             adj_mat = data[[3]],
+                             average = average)
 
         output <- list("summarized results" = summary,
                        "estimated models" = est[[1]],
@@ -225,9 +229,7 @@ sim_bgm <- function(level = c("Gaussian", "Discrete"),
 
         class(output) <- "simBgms"
 
-
       }
-
       return(output)
     }
   }
