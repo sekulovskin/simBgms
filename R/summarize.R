@@ -149,6 +149,7 @@ summarize <- function(estimates,
 
   if (level == "Gaussian") {
     param_grid <- expand.grid(
+      rep = 1:repetitions,
       k = density,
       i = no_observations,
       j = no_variables
@@ -189,7 +190,7 @@ summarize <- function(estimates,
   # Add column names
   if (level == "Gaussian") {
     for (i in 1:length(combined_list)) {
-      colnames(combined_list[[i]]) <- c("density", "no_observations", "no_variables",
+      colnames(combined_list[[i]]) <- c("repetition","density", "no_observations", "no_variables",
                                         "estimate", "inclusion")
     }
   } else {
