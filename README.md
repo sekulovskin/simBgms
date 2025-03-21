@@ -36,7 +36,6 @@ sim_bgm(level = "Discrete",
         no_categories = c(1, 2), 
         ordinal_sim_type = "irt",
         induce_sparsity = TRUE,
-        induce_sparsity = FALSE,
         density = c(0.1, 0.5, 0.9))
 ```
 
