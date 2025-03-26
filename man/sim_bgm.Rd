@@ -33,7 +33,8 @@ sim_bgm(
   bc_alpha = 0.5,
   bc_beta = -0.5,
   iter = 10000,
-  burnin = 1000
+  burnin = 1000,
+  average = TRUE
 )
 }
 \arguments{
@@ -88,6 +89,8 @@ sim_bgm(
 \item{iter}{The number of iterations for the MCMC algorithm.}
 
 \item{burnin}{The number of burn-in iterations for the MCMC algorithm.}
+
+\item{average}{If \code{TRUE}, the results are averaged across the \code{repetitions}. If \code{FALSE}, the results are not averaged.}
 }
 \value{
 A list containing: (i) a data frame with the summarized results (only if \code{save = FALSE}), averaged across \code{repetitions}; (ii) a list with the estimated models; (iii) the simulated data sets; (iv) the maximum pseudolikelihood parameters or precision matrices; (v) the graph adjacency matrices; and (vi) a data frame with the parameter grid for an overview of the design of the simulation.
