@@ -53,7 +53,7 @@ combine_with_param_grid <- function(matrix_list, param_grid) {
 
 
 # Function to add lower triangular elements as a new column
-add_lower_tri_elements <- function(combined_list, adj_mat) {
+add_true_inclusion_elements <- function(combined_list, adj_mat) {
   for (i in 1:length(combined_list)) {
     # Extract no_variables and density from the current combined_list element
     no_vars <- combined_list[[i]]$no_variables[1]
@@ -68,32 +68,45 @@ add_lower_tri_elements <- function(combined_list, adj_mat) {
       # Extract the corresponding adjacency matrix
       adj_matrix <- adj_mat[[no_vars_key]][[dens_key]]
 
-      # Extract the lower triangular elements of the adjacency matrix
-      lower_tri_elements <- adj_matrix[lower.tri(adj_matrix)]
+      # Get variable names (assuming colnames exist)
+      var_names <- colnames(adj_matrix)
+      if (is.null(var_names)) {
+        var_names <- paste0("V", 1:ncol(adj_matrix))
+      }
+
+      # Create pair names for upper triangular elements
+      pair_names <- apply(which(upper.tri(adj_matrix), arr.ind = TRUE), 1,
+                          function(x) paste(var_names[x[1]], var_names[x[2]], sep = "-"))
+
+      # Extract the upper triangular elements of the adjacency matrix
+      true_inclusion_elements <- adj_matrix[upper.tri(adj_matrix)]
 
       # Get the number of rows in the current data frame
       n_rows <- nrow(combined_list[[i]])
 
-      # Check if the number of lower triangular elements matches the number of rows
-      if (length(lower_tri_elements) == n_rows) {
-        # Add the lower triangular elements as a new column
-        combined_list[[i]]$lower_tri <- lower_tri_elements
-      } else if (length(lower_tri_elements) > n_rows) {
-        # Truncate the lower triangular elements to match the number of rows
-        combined_list[[i]]$lower_tri <- lower_tri_elements[1:n_rows]
+      # Check if the number of upper triangular elements matches the number of rows
+      if (length(true_inclusion_elements) == n_rows) {
+        # Add the elements and pair names as new columns
+        combined_list[[i]]$true_inclusion <- true_inclusion_elements
+        combined_list[[i]]$variable_pair <- pair_names
+      } else if (length(true_inclusion_elements) > n_rows) {
+        # Truncate the elements and names to match the number of rows
+        combined_list[[i]]$true_inclusion <- true_inclusion_elements[1:n_rows]
+        combined_list[[i]]$variable_pair <- pair_names[1:n_rows]
       } else {
-        # Pad the lower triangular elements with NA to match the number of rows
-        combined_list[[i]]$lower_tri <- c(lower_tri_elements, rep(NA, n_rows - length(lower_tri_elements)))
+        # Pad the elements and names with NA to match the number of rows
+        combined_list[[i]]$true_inclusion <- c(true_inclusion_elements, rep(NA, n_rows - length(true_inclusion_elements)))
+        combined_list[[i]]$variable_pair <- c(pair_names, rep(NA, n_rows - length(pair_names)))
       }
     } else {
-      # If the adjacency matrix does not exist, add a column of NA values
-      combined_list[[i]]$lower_tri <- rep(NA, nrow(combined_list[[i]]))
+      # If the adjacency matrix does not exist, add columns of NA values
+      combined_list[[i]]$true_inclusion <- rep(NA, nrow(combined_list[[i]]))
+      combined_list[[i]]$variable_pair <- rep(NA, nrow(combined_list[[i]]))
     }
   }
 
   return(combined_list)
 }
-
 # the main function
 
 summarize <- function(estimates,
@@ -173,8 +186,8 @@ summarize <- function(estimates,
   }
 
   # Extract the lower triangular elements
-  gammas_1 <- lapply(gammas, function(x) x[lower.tri(x)])
-  thetas_1 <- lapply(thetas, function(x) x[lower.tri(x)])
+  gammas_1 <- lapply(gammas, function(x) x[upper.tri(x)])
+  thetas_1 <- lapply(thetas, function(x) x[upper.tri(x)])
 
   # Combine into a list of data frames
   combined <- lapply(1:length(est), function(i) {
@@ -202,16 +215,25 @@ summarize <- function(estimates,
     }
   }
     # Add the true inclusions (lower triangular elements of adjacency matrices)
-    combined_list <- add_lower_tri_elements(combined_list, adj_mat)
+    combined_list <- add_true_inclusion_elements(combined_list, adj_mat)
 
     # Unlist into a single data frame
     combined_df <- dplyr::bind_rows(combined_list)
 
     # Average the results if requested
-    if (average) {
+    if (average == TRUE & level == "Gaussian") {
       # Group by the specified columns and calculate the mean for each group
       combined_df <- aggregate(
-        cbind(estimate, inclusion, lower_tri) ~ interaction_scale + no_categories + density + no_observations + no_variables,
+        cbind(estimate, inclusion, true_inclusion) ~ density + no_observations +
+          no_variables + variable_pair,
+        data = combined_df,
+        FUN = function(x) mean(x, na.rm = TRUE)
+      )
+    } else if (average == TRUE & level == "Discrete") {
+      # Group by the specified columns and calculate the mean for each group
+      combined_df <- aggregate(
+        cbind(estimate, inclusion, true_inclusion) ~ interaction_scale + no_categories +
+          density + no_observations + no_variables + variable_pair,
         data = combined_df,
         FUN = function(x) mean(x, na.rm = TRUE)
       )

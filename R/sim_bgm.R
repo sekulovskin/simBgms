@@ -29,6 +29,7 @@
 #' @param bc_alpha,bc_beta  \code{bc_alpha} the linear contribution of the Blume-Capel model and \code{bc_beta} the quadratic contribution. Defaults to 0.5 and 0.5, respectively.
 #' @return A list containing: (i) a data frame with the summarized results (only if \code{save = FALSE}), averaged across \code{repetitions}; (ii) a list with the estimated models; (iii) the simulated data sets; (iv) the maximum pseudolikelihood parameters or precision matrices; (v) the graph adjacency matrices; and (vi) a data frame with the parameter grid for an overview of the design of the simulation.
 #' @param iter The number of iterations for the MCMC algorithm.
+#' @param average If \code{TRUE}, the results are averaged across the \code{repetitions}. If \code{FALSE}, the results are not averaged.
 #' @details This function integrates the simulation and estimation process for Bayesian Graphical Models. It provides options for parallel computation using multiple CPU cores.
 #'
 #' @export

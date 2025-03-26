@@ -8,7 +8,7 @@ Description: This package can be used to simulate data for Markov random field m
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Depends: 
     R (>= 2.10) 
 Imports: Rcpp (>= 1.0.7), Rdpack, doParallel, foreach, bgms, BDgraph, methods
